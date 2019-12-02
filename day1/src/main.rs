@@ -24,21 +24,31 @@ fn calculate_fuel_for_module(module_mass: u32) -> u32 {
 }
 
 fn main() {
-    let mut total_fuel: u32 = 0;
-
     let input_filename = "input.txt";
     match get_module_masses_from_input(input_filename) {
         Ok(module_masses) => {
-            total_fuel = module_masses
+            let total_fuel: u32 = module_masses
                 .into_iter()
-                .map(|m| calculate_fuel_for_module(m))
-                .sum()
+                .map(|m| {
+                    let module_mass = calculate_fuel_for_module(m);
+                    let mut module_and_fuel_mass = module_mass;
+                    let mut fuel_mass = module_mass;
+                    while fuel_mass > 0 {
+                        let added_mass = calculate_fuel_for_module(fuel_mass);
+                        if added_mass > 0 {
+                            module_and_fuel_mass += added_mass;
+                        }
+                        fuel_mass = added_mass;
+                    }
+
+                    return module_and_fuel_mass;
+                })
+                .sum();
+            println!("total fuel {}", total_fuel);
         }
         Err(e) => println!(
             "Err encountered reading input file {}: {}",
             input_filename, e
         ),
     }
-
-    println!("total fuel {}", total_fuel);
 }

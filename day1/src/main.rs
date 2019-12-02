@@ -9,9 +9,8 @@ fn get_module_masses_from_input(filename: &str) -> std::io::Result<Vec<u32>> {
     let mut buf_reader = BufReader::new(file);
     let mut contents = String::new();
     buf_reader.read_to_string(&mut contents)?;
-    let masses_str: Vec<&str> = contents.split("\n").collect();
-    let masses: Vec<u32> = masses_str
-        .into_iter()
+    let masses: Vec<u32> = contents
+        .split("\n")
         .map(|m| m.parse::<u32>().unwrap())
         .collect();
     Ok(masses)
